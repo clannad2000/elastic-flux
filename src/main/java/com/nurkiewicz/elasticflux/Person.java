@@ -13,7 +13,7 @@ import java.util.List;
 class Person {
     @NotNull
     @Valid
-    private final Address address;
+    private final String address;
 
     @NotBlank
     private final String firstName;
@@ -44,7 +44,7 @@ class Person {
     private final LocalDate dateOfBirth;
 
     @Valid
-    private final Company company;
+    private final String company;
 
     @NotBlank
     private final String nationalIdentityCardNumber;

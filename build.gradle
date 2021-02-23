@@ -1,48 +1,71 @@
 buildscript {
-	ext {
-		springBootVersion = '2.0.0.M7'
-	}
-	repositories {
-		mavenCentral()
-		maven { url "https://repo.spring.io/snapshot" }
-		maven { url "https://repo.spring.io/milestone" }
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '2.0.0.M7'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-
+apply plugin: 'maven'
+//apply plugin: 'application'
 group = 'com.nurkiewicz'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
+//mainClassName = 'com.nurkiewicz.elasticflux.ElasticFluxApplication'
+
+//dependencies {
+//	compile project("elastic-flux")
+//}
+jar {
+    manifest {
+        attributes "Main-Class": "com.nurkiewicz.elasticflux.ElasticFluxApplication"
+    }
+}
+
 repositories {
-	mavenCentral()
-	maven { url "https://repo.spring.io/snapshot" }
-	maven { url "https://repo.spring.io/milestone" }
+    mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+}
+sourceSets {
+	main {
+		java {
+			srcDir 'src/main/java'          // 指定java源码目录
+		}
+		resources {
+			srcDir 'src/main/resources'     //资源目录
+		}
+	}
 }
 
 
-dependencies {
-	compile 'org.springframework.boot:spring-boot-starter'
-	compile 'org.springframework.boot:spring-boot-starter-webflux'
-	compile 'org.springframework.boot:spring-boot-starter-actuator'
-	compile 'io.micrometer:micrometer-registry-graphite:1.0.0-rc.5'
-	compile 'io.projectreactor:reactor-test'
-	compile 'org.elasticsearch:elasticsearch:6.0.1'
-	compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:6.0.1'
-	compile 'io.codearte.jfairy:jfairy:0.5.9'
-	compile 'org.projectlombok:lombok:1.16.18'
-	compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.2'
+    dependencies {
+        compile 'org.springframework.boot:spring-boot-starter'
+        compile 'org.springframework.boot:spring-boot-starter-webflux'
+        compile 'org.springframework.boot:spring-boot-starter-actuator'
+//	compile 'io.micrometer:micrometer-registry-graphite:1.0.0-rc.5'
+        compile 'io.projectreactor:reactor-test'
+        compile 'org.elasticsearch:elasticsearch:7.5.0'
+        compile 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.5.0'
+        compile 'io.codearte.jfairy:jfairy:0.5.9'
+        compile 'org.projectlombok:lombok:1.16.18'
+        compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.2'
+        compile 'org.apache.commons:commons-collections4:4.4'
 
-	testCompile 'org.springframework.boot:spring-boot-starter-test'
-	testCompile 'io.projectreactor:reactor-test'
-	testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
-	testCompile 'org.spockframework:spock-spring:1.1-groovy-2.4'
+        testCompile 'org.springframework.boot:spring-boot-starter-test'
+        testCompile 'io.projectreactor:reactor-test'
+        testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+        testCompile 'org.spockframework:spock-spring:1.1-groovy-2.4'
 
-}
+    }

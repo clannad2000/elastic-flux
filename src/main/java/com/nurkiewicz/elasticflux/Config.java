@@ -31,23 +31,23 @@ class Config {
                                 .setConnectTimeout(props.getConnectTimeout())
                                 .setConnectionRequestTimeout(props.getConnectionRequestTimeout())
                                 .setSocketTimeout(props.getSocketTimeout())
-                        )
-                        .setMaxRetryTimeoutMillis(props.getMaxRetryTimeoutMillis()));
+                        ));
+                        //.setMaxRetryTimeoutMillis(props.getMaxRetryTimeoutMillis()));
     }
 
 
-    @Bean
-    @ConditionalOnProperty(value = "spring.metrics.binders.jvmthreads.enabled", matchIfMissing = true)
-    @ConditionalOnMissingBean(JvmThreadMetrics.class)
-    public JvmThreadMetrics jvmThreadMetrics() {
-        return new JvmThreadMetrics();
-    }
-
-    @Bean
-    @ConditionalOnProperty(value = "spring.metrics.binders.jvmgc.enabled", matchIfMissing = true)
-    @ConditionalOnMissingBean(JvmGcMetrics.class)
-    public JvmGcMetrics jvmGcMetrics() {
-        return new JvmGcMetrics();
-    }
+//    @Bean
+//    @ConditionalOnProperty(value = "spring.metrics.binders.jvmthreads.enabled", matchIfMissing = true)
+//    @ConditionalOnMissingBean(JvmThreadMetrics.class)
+//    public JvmThreadMetrics jvmThreadMetrics() {
+//        return new JvmThreadMetrics();
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(value = "spring.metrics.binders.jvmgc.enabled", matchIfMissing = true)
+//    @ConditionalOnMissingBean(JvmGcMetrics.class)
+//    public JvmGcMetrics jvmGcMetrics() {
+//        return new JvmGcMetrics();
+//    }
 
 }

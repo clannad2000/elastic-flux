@@ -11,7 +11,9 @@ import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.stereotype.Component;
@@ -34,21 +36,22 @@ class ElasticAdapter {
     private final Counter successes = Metrics.counter("es.index", "result", "success");
     private final Counter failures = Metrics.counter("es.index", "result", "failure");
 
-    Mono<Person> findByUserName(String userName) {
+    public static final String index = "tyredb-s_garage";
+
+    Mono<String> findById(String id) {
         return Mono
-                .<GetResponse>create(sink ->
-                        client.getAsync(new GetRequest("people", "person", userName), listenerToSink(sink))
-                )
+                .<GetResponse>create(sink -> client.getAsync(new GetRequest(index, id), RequestOptions.DEFAULT, listenerToSink(sink)))
                 .filter(GetResponse::isExists)
-                .map(GetResponse::getSource)
-                .map(map -> objectMapper.convertValue(map, Person.class));
+                .map(GetResponse::getSourceAsString);
+//                .map(GetResponse::getSource)
+//                .map(map -> objectMapper.convertValue(map, Person.class));
     }
 
     Mono<IndexResponse> index(Person doc) {
         return indexDoc(doc)
-                .compose(this::countSuccFail)
-                .compose(this::countConcurrent)
-                .compose(this::measureTime)
+//                .compose(this::countSuccFail)
+//                .compose(this::countConcurrent)
+//                .compose(this::measureTime)
                 .doOnError(e -> log.error("Unable to index {}", doc, e));
     }
 
@@ -84,13 +87,13 @@ class ElasticAdapter {
     }
 
     private void doIndex(Person doc, ActionListener<IndexResponse> listener) throws JsonProcessingException {
-        final IndexRequest indexRequest = new IndexRequest("people", "person", doc.getUsername());
+        final IndexRequest indexRequest = new IndexRequest(index).source(doc);
         final String json = objectMapper.writeValueAsString(doc);
         indexRequest.source(json, XContentType.JSON);
-        client.indexAsync(indexRequest, listener);
+        client.indexAsync(indexRequest, RequestOptions.DEFAULT, listener);
     }
 
-    private <T> ActionListener<T> listenerToSink(MonoSink<T> sink) {
+    public static <T> ActionListener<T> listenerToSink(MonoSink<T> sink) {
         return new ActionListener<T>() {
             @Override
             public void onResponse(T response) {
